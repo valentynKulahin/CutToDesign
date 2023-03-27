@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--AUTHORIZATION SCREEN-->
+    <string name="as_sign_in">Вхід</string>
+    <string name="as_mobile_number">Телефон</string>
+    <string name="as_password">Пароль</string>
+    <string name="as_remember_me">Запам’ятати мене</string>
+    <string name="as_forgot_password">Забули пароль?</string>
+    <string name="as_login">Логін</string>
+    <string name="as_text_version">Ця версія додатку</string>
+    <string name="as_text_version_old">застаріла</string>
+    <string name="as_text_version_correct">остання</string>
+    <string name="as_update_now">Оновити зараз!</string>
+    <string name="as_not_have_account">Немає аккаунту?</string>
+    <string name="as_sign_up">Зареєструватися</string>
+
+    <!--HOME SCREEN-->
+    <string name="hm_menu">Меню</string>
+    <string name="hm_catalog_brands">Каталог брендів</string>
+
+    <!--CATALOG BRANDS SCREEN-->
+    <string name="cb_catalog_brands">Каталог брендів</string>
+
+    <!--Exit Screen-->
+    <string name="es_question_first">Бажаєте вийти з</string>
+    <string name="es_question_second">додатку?</string>
+    <string name="es_button_no">Ні</string>
+    <string name="es_button_yes">Так</string>
+
+</resources>

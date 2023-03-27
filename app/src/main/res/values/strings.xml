@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Cut to Design</string>
+
+    <!--SPLASH SCREEN-->
+    <string name="splash_screen" translatable="false">Splash</string>
+
+    <!--AUTHORIZATION SCREEN-->
+    <string name="as_sign_in">Sign in</string>
+    <string name="as_mobile_number">Mobile number</string>
+    <string name="as_password">Password</string>
+    <string name="as_remember_me">Remember me</string>
+    <string name="as_forgot_password">Forgot password?</string>
+    <string name="as_login">Login</string>
+    <string name="as_text_version">This version of app</string>
+    <string name="as_text_version_old">is old</string>
+    <string name="as_text_version_correct">is correct</string>
+    <string name="as_update_now">Update now!</string>
+    <string name="as_not_have_account">Not have Account?</string>
+    <string name="as_sign_up">Sign up</string>
+
+    <!--BOTTOM BAR-->
+    <string name="bb_home" translatable="false">Home</string>
+    <string name="bb_catalog_brands" translatable="false">Catalog brands</string>
+    <string name="bb_coins" translatable="false">Coins</string>
+    <string name="bb_support" translatable="false">Support</string>
+    <string name="bb_settings" translatable="false">Settings</string>
+
+    <!--HOME SCREEN-->
+    <string name="hm_cut_on" translatable="false">CutOn</string>
+    <string name="hm_menu">Menu</string>
+    <string name="hm_catalog_brands">Catalog brands</string>
+
+    <!--CATALOG BRANDS SCREEN-->
+    <string name="cb_catalog_brands">Catalog brands</string>
+
+    <!--Exit Screen-->
+    <string name="es_exit_screen" translatable="false">Exit</string>
+    <string name="es_question_first">Do you want exit</string>
+    <string name="es_question_second">from App?</string>
+    <string name="es_button_no">No</string>
+    <string name="es_button_yes">Yes</string>
+
+
+</resources>
