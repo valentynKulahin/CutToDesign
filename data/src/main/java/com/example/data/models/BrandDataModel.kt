@@ -1,7 +1,9 @@
 package com.example.data.models
 
+import com.google.gson.annotations.SerializedName
+
 data class BrandDataModel (
-    val brandId: Int = 0,
-    val brandName: String = "",
-    val brandImage: String = ""
+    @SerializedName ("brandId") val brandId: Int = 0,
+    @SerializedName ("brandName") val brandName: String = "",
+    @SerializedName ("brandImage") val brandImage: String = ""
 )

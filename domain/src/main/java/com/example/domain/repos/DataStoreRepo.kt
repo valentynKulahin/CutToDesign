@@ -11,7 +11,7 @@ interface DataStoreRepo {
     suspend fun getAppName(): Flow<String>
 
     suspend fun updateRouteApi(routeApi: String)
-    suspend fun getRouteApi(): Flow<String>
+    fun getRouteApi(): Flow<String>
 
     suspend fun updateAppVersion(appVersion: String)
     suspend fun getAppVersion(): Flow<String>

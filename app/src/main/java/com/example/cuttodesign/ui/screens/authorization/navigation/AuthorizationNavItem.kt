@@ -1,7 +1,6 @@
-package com.example.cuttodesign.ui.screens.authorization
+package com.example.cuttodesign.ui.screens.authorization.navigation
 
 import com.example.cuttodesign.R
-import com.example.cuttodesign.ui.screens.navigation.NavItem
 
 sealed class AuthorizationNavItem(
     val route: String
@@ -12,9 +11,5 @@ sealed class AuthorizationNavItem(
 
     object SplashScreen : AuthorizationNavItem(
         route = R.string.splash_screen.toString()
-    )
-
-    object HomeScreen : AuthorizationNavItem(
-        route = R.string.bb_home.toString()
     )
 }

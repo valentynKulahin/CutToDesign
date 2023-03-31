@@ -56,7 +56,7 @@ class DataStoreRepositoryImpl @Inject constructor(
         dataStore.edit { it[PreferencesKeys.routeApi] = routeApi }
     }
 
-    override suspend fun getRouteApi(): Flow<String> {
+    override fun getRouteApi(): Flow<String> {
         return dataStore.data
             .catch { exception ->
                 // dataStore.data throws an IOException when an error is encountered when reading data

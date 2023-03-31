@@ -1,5 +1,7 @@
 package com.example.data.models
 
+import com.google.gson.annotations.SerializedName
+
 data class ItemsDataModel(
-    val itemList: List<ItemDataModel> = emptyList()
+    @SerializedName("items") val items: List<ItemDataModel> = emptyList()
 )

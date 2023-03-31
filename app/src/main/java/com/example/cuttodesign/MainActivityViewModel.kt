@@ -2,9 +2,6 @@ package com.example.cuttodesign
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.data.datastore.PreferencesKeys.appName
-import com.example.data.datastore.PreferencesKeys.routeApi
-import com.example.domain.repos.AuthorizationRepo
 import com.example.domain.repos.DataStoreRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -32,17 +29,9 @@ class MainActivityViewModel @Inject constructor(
 
             dataStoreRepo.updateAppName(appName = "cuton")
             dataStoreRepo.updateAppVersion(appVersion = "36")
-            dataStoreRepo.updateFirstRouteApi(firstRouteApi = "https://cr-test-ribu2uaqea-ey.a.run.app/routes")
-            dataStoreRepo.updateRouteApi(routeApi = "https://cr-test-ribu2uaqea-ey.a.run.app/routes")
+            dataStoreRepo.updateFirstRouteApi(firstRouteApi = "https://cr-test-ribu2uaqea-ey.a.run.app/")
+            dataStoreRepo.updateRouteApi(routeApi = "https://cr-test-ribu2uaqea-ey.a.run.app/")
         }
-    }
-
-    fun setToken() {
-        scope.launch {
-            dataStoreRepo.updateToken(token = "1")
-            _uiState.emit(_uiState.value.copy(token = dataStoreRepo.getToken().first()))
-        }
-        Log.d("MainActivity", "set token: ${_uiState.value.token}")
     }
 
     fun clearToken() {

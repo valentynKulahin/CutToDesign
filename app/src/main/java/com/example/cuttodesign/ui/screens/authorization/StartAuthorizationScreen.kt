@@ -47,7 +47,8 @@ fun StartAuthorizationScreen(
             ) {
                 AuthorizationScreen(
                     navController = navController,
-                    mainActivityViewModel = mainActivityViewModel
+                    mainActivityViewModel = mainActivityViewModel,
+                    authorizationViewModel = authorizationViewModel
                 )
             }
         }
@@ -58,8 +59,12 @@ fun StartAuthorizationScreen(
 @Composable
 fun AuthorizationScreen(
     navController: NavHostController,
-    mainActivityViewModel: MainActivityViewModel
+    mainActivityViewModel: MainActivityViewModel,
+    authorizationViewModel: AuthorizationViewModel
 ) {
+
+    val authorizationVM by authorizationViewModel.uiState.collectAsState()
+    val stateVersion = remember { mutableStateOf(authorizationVM.v) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -72,8 +77,8 @@ fun AuthorizationScreen(
             Spacer(modifier = Modifier.height(40.dp))
             AuthorizationScreenAuth()
             AuthorizationScreenOptionalFeatures()
-            AuthorizationScreenButtonSignIn(setToken = { mainActivityViewModel.setToken() })
-            AuthorizationScreenTextVersion()
+            AuthorizationScreenButtonSignIn(setToken = { authorizationVM.token })
+            AuthorizationScreenTextVersion(stateVersion = stateVersion.value)
             AuthorizationScreenUpdateNow()
             AuthorizationScreenBottomElements()
         }
@@ -272,13 +277,12 @@ fun AuthorizationScreenButtonSignIn(setToken: () -> Unit) {
 }
 
 @Composable
-fun AuthorizationScreenTextVersion() {
-    val stateVersion = remember { mutableStateOf(false) }
+fun AuthorizationScreenTextVersion(stateVersion: Boolean) {
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = stringResource(id = R.string.as_text_version), color = Color.Gray)
         Text(
-            text = if (stateVersion.value) stringResource(id = R.string.as_text_version_correct) else stringResource(
+            text = if (stateVersion) stringResource(id = R.string.as_text_version_correct) else stringResource(
                 id = R.string.as_text_version_old
             ),
             color = Color.Gray
