@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val dataStoreRepo: DataStoreRepo
-): ViewModel() {
+) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.IO)
     private val _uiState = MutableStateFlow(MainActivityContract())
@@ -31,6 +31,12 @@ class MainActivityViewModel @Inject constructor(
             dataStoreRepo.updateAppVersion(appVersion = "36")
             dataStoreRepo.updateFirstRouteApi(firstRouteApi = "https://cr-test-ribu2uaqea-ey.a.run.app/")
             dataStoreRepo.updateRouteApi(routeApi = "https://cr-test-ribu2uaqea-ey.a.run.app/")
+        }
+    }
+
+    fun setToken() {
+        scope.launch {
+            _uiState.emit(_uiState.value.copy(token = dataStoreRepo.getToken().first()))
         }
     }
 

@@ -54,7 +54,7 @@ fun SplashScreen(navController: NavHostController) {
             imageVector = ImageVector.vectorResource(id = R.drawable.splash_icon),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
+            modifier = Modifier.clickable { navController.navigate(AuthorizationNavItem.Authorization.route) }
         )
     }
 

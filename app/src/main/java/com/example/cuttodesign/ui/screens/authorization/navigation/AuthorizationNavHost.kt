@@ -1,18 +1,17 @@
-package com.example.cuttodesign.ui.screens.authorization
+package com.example.cuttodesign.ui.screens.authorization.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cuttodesign.MainActivityViewModel
-import com.example.cuttodesign.ui.screens.authorization.navigation.AuthorizationNavItem
-import com.example.cuttodesign.ui.screens.splash.SplashViewModel
+import com.example.cuttodesign.ui.screens.authorization.AuthorizationViewModel
+import com.example.cuttodesign.ui.screens.authorization.StartAuthorizationScreen
 import com.example.cuttodesign.ui.screens.splash.StartSplashScreen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun AuthorizationNavHost(
     navController: NavHostController,

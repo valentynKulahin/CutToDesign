@@ -1,9 +1,11 @@
 package com.example.data.repos.api
 
+import android.media.session.MediaSession.Token
+import android.util.Log
 import com.example.data.api.AuthorizationRetrofitRepo
 import com.example.data.api.retrofit.RetrofitHelper
-import com.example.data.models.ActualVersionDataModel
-import com.example.data.models.ApiRouteDataModel
+import com.example.data.models.*
+import com.example.domain.models.UserDeviceDomainModel
 import com.example.domain.repos.DataStoreRepo
 import kotlinx.coroutines.flow.first
 import retrofit2.Call
@@ -13,11 +15,11 @@ import javax.inject.Singleton
 @Singleton
 class AuthorizationRetrofitRepoImpl @Inject constructor(
     private val dataStoreRepo: DataStoreRepo
-): AuthorizationRetrofitRepo {
+) : AuthorizationRetrofitRepo {
 
-    lateinit var retrofit: AuthorizationRetrofitRepo
+    private lateinit var retrofit: AuthorizationRetrofitRepo
 
-    override suspend fun getApiAddress(
+    override suspend fun getApiAddressAsync(
         appName: String,
         versionApp: String
     ): ApiRouteDataModel {
@@ -25,10 +27,12 @@ class AuthorizationRetrofitRepoImpl @Inject constructor(
             RetrofitHelper.getInstanceFirst(dataStoreRepo.getFirstRouteApi().first().toString())
 
         val apiRoute: ApiRouteDataModel = try {
-            retrofitHelper.getApiAddress(appName = appName, versionApp = versionApp)
+            retrofitHelper.getApiAddressAsync(appName = appName, versionApp = versionApp)
         } catch (e: Exception) {
             ApiRouteDataModel("")
         }
+
+        Log.d("Retrofit", "getApiAddressAsync: ${apiRoute.route}")
 
         return apiRoute
     }
@@ -42,18 +46,22 @@ class AuthorizationRetrofitRepoImpl @Inject constructor(
             ActualVersionDataModel(0)
         }
 
+        Log.d("Retrofit", "getApiAddressAsync: ${lastVersion.actual_version}")
+
         return lastVersion
     }
 
     override suspend fun postMyAuthorizationInfoAsync(
-        login: String,
-        password: String,
-        devman: String,
-        devmod: String,
-        devavs: String,
-        devaid: String
-    ): Call<String> {
-        TODO("Not yet implemented")
+        userDeviceDataModel: UserDeviceDataModel
+    ): TokenDataModel {
+        val token: TokenDataModel = try {
+            retrofit.postMyAuthorizationInfoAsync(
+                userDeviceDataModel = userDeviceDataModel
+            )
+        } catch (e: Exception) {
+            TokenDataModel("")
+        }
+        return token
     }
 
 }

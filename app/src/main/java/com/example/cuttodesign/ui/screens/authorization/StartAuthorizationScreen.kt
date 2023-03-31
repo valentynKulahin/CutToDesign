@@ -1,5 +1,8 @@
 package com.example.cuttodesign.ui.screens.authorization
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -23,12 +27,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.cuttodesign.MainActivityViewModel
 import com.example.cuttodesign.R
-import com.example.cuttodesign.ui.screens.navigation.NavItem
-import com.example.cuttodesign.ui.screens.navigation.StartMainNavigation
+import com.example.data.datastore.PreferencesKeys.token
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun StartAuthorizationScreen(
     navController: NavHostController,
@@ -56,6 +59,7 @@ fun StartAuthorizationScreen(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun AuthorizationScreen(
     navController: NavHostController,
@@ -64,7 +68,10 @@ fun AuthorizationScreen(
 ) {
 
     val authorizationVM by authorizationViewModel.uiState.collectAsState()
-    val stateVersion = remember { mutableStateOf(authorizationVM.v) }
+    val stateVersion = remember { mutableStateOf(authorizationVM.version) }
+    val token = remember { mutableStateOf(authorizationVM.token) }
+    val login = remember { mutableStateOf(authorizationVM.login) }
+    val password = remember { mutableStateOf(authorizationVM.password) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -75,9 +82,24 @@ fun AuthorizationScreen(
         ) {
             AuthorizationScreenTextEntered()
             Spacer(modifier = Modifier.height(40.dp))
-            AuthorizationScreenAuth()
+            AuthorizationScreenTextFieldLogin(loginString = login.value) {
+                login.value = it
+            }
+            AuthorizationScreenTextFieldPassword(passwordString = password.value) {
+                password.value = it
+            }
             AuthorizationScreenOptionalFeatures()
-            AuthorizationScreenButtonSignIn(setToken = { authorizationVM.token })
+            AuthorizationScreenButtonSignIn(
+                setToken = {
+                    mainActivityViewModel.setToken()
+                },
+                getToken = {
+                    authorizationViewModel.getToken(
+                        login = login.value,
+                        password = password.value
+                    )
+                }
+            )
             AuthorizationScreenTextVersion(stateVersion = stateVersion.value)
             AuthorizationScreenUpdateNow()
             AuthorizationScreenBottomElements()
@@ -98,26 +120,17 @@ fun AuthorizationScreenTextEntered() {
     )
 }
 
-@Composable
-fun AuthorizationScreenAuth() {
-    Column(
-        modifier = Modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AuthorizationScreenTextFieldLogin()
-        AuthorizationScreenTextFieldPassword()
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthorizationScreenTextFieldLogin() {
-    val loginState = remember { mutableStateOf("") }
+fun AuthorizationScreenTextFieldLogin(loginString: String, onEdit: (String) -> Unit) {
+    val loginState = remember { mutableStateOf(loginString) }
 
     TextField(
         value = loginState.value,
-        onValueChange = { newLogin -> loginState.value = newLogin },
+        onValueChange = {
+            onEdit(it)
+            loginState.value = it
+        },
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 15.dp, end = 15.dp, top = 10.dp, bottom = 10.dp),
@@ -151,13 +164,16 @@ fun AuthorizationScreenTextFieldLogin() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthorizationScreenTextFieldPassword() {
-    val statePassword = remember { mutableStateOf("") }
+fun AuthorizationScreenTextFieldPassword(passwordString: String, onEdit: (String) -> Unit) {
+    val statePassword = remember { mutableStateOf(passwordString) }
     val showPassword = remember { mutableStateOf(false) }
 
     TextField(
         value = statePassword.value,
-        onValueChange = { newPassword -> statePassword.value = newPassword },
+        onValueChange = {
+            onEdit(it)
+            statePassword.value = it
+        },
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 15.dp, end = 15.dp, bottom = 10.dp),
@@ -253,10 +269,13 @@ fun AuthorizationScreenForgotPassword() {
 }
 
 @Composable
-fun AuthorizationScreenButtonSignIn(setToken: () -> Unit) {
+fun AuthorizationScreenButtonSignIn(setToken: () -> Unit, getToken: () -> Unit) {
 
     ElevatedButton(
-        onClick = { setToken() },
+        onClick = {
+            getToken()
+            setToken()
+        },
         modifier = Modifier
             .fillMaxWidth()
             .padding(15.dp),
@@ -277,16 +296,30 @@ fun AuthorizationScreenButtonSignIn(setToken: () -> Unit) {
 }
 
 @Composable
-fun AuthorizationScreenTextVersion(stateVersion: Boolean) {
+fun AuthorizationScreenTextVersion(stateVersion: Int) {
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = stringResource(id = R.string.as_text_version), color = Color.Gray)
         Text(
-            text = if (stateVersion) stringResource(id = R.string.as_text_version_correct) else stringResource(
+            text = if (stateVersion == 0) stringResource(id = R.string.as_text_version_correct) else stringResource(
                 id = R.string.as_text_version_old
             ),
             color = Color.Gray
         )
+
+        if (stateVersion == 1) {
+            Toast.makeText(
+                LocalContext.current,
+                "You have old version",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else if (stateVersion == 2) {
+            Toast.makeText(
+                LocalContext.current,
+                "You have very old version, you cant work",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }
 

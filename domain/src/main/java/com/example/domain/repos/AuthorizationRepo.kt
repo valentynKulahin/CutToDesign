@@ -1,6 +1,6 @@
 package com.example.domain.repos
 
-import android.telecom.Call
+import com.example.domain.models.UserDeviceDomainModel
 
 interface AuthorizationRepo {
 
@@ -9,12 +9,7 @@ interface AuthorizationRepo {
     suspend fun getLastVersionAsync(v: Int): Int
 
     suspend fun postMyAuthorizationInfoAsync(
-        login: String,
-        password: String,
-        devman: String,
-        devmod: String,
-        devavs: String,
-        devaid: String
-    )
+        userDeviceDomainModel: UserDeviceDomainModel
+    ): String
 
 }

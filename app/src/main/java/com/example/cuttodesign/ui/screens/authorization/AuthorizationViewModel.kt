@@ -1,7 +1,16 @@
 package com.example.cuttodesign.ui.screens.authorization
 
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.test.orchestrator.junit.BundleJUnitUtils.getResult
+import com.example.data.api.AuthorizationRetrofitRepo
+import com.example.domain.models.AuthDomainModel
+import com.example.domain.models.DeviceDomainModel
+import com.example.domain.models.UserDeviceDomainModel
 import com.example.domain.repos.AuthorizationRepo
 import com.example.domain.repos.DataStoreRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +23,7 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.M)
 @HiltViewModel
 class AuthorizationViewModel @Inject constructor(
     private val retrofitRepo: AuthorizationRepo,
@@ -26,30 +36,65 @@ class AuthorizationViewModel @Inject constructor(
 
     init {
         scope.launch {
+            //route API
             val site = retrofitRepo.getApiAddressAsync(
-                dataStoreRepo.getAppName().last(),
-                dataStoreRepo.getAppVersion().last()
+                dataStoreRepo.getAppName().first(),
+                dataStoreRepo.getAppVersion().first()
             )
-
             dataStoreRepo.updateRouteApi(routeApi = site)
 
-
+            //last version
             val result = retrofitRepo.getLastVersionAsync(
-                dataStoreRepo.getAppVersion().last().toInt()
+                dataStoreRepo.getAppVersion().first().toInt()
             )
+            dataStoreRepo.updateAppVersion(appVersion = result.toString())
+            _uiState.emit(_uiState.value.copy(version = result))
 
+            //device info
             _uiState.emit(
-                _uiState.value.copy(v = !(result == 1 || result == 2))
+                _uiState.value.copy(
+                    devman = Build.BRAND.toString(),
+                    devmod = Build.MODEL,
+                    devavs = Build.VERSION.SDK_INT.toString(),
+                    devaid = Settings.Secure.ANDROID_ID
+
+                )
             )
         }
     }
 
-    fun getToken() {
+    fun setAuthInfo(login: String, password: String) {
         scope.launch {
-            dataStoreRepo.updateToken(token = "1")
-            _uiState.emit(_uiState.value.copy(token = dataStoreRepo.getToken().first()))
+            _uiState.emit(_uiState.value.copy(login = login))
+            _uiState.emit(_uiState.value.copy(password = password))
         }
-        Log.d("MainActivity", "set token: ${_uiState.value.token}")
+    }
+
+    fun getToken(login: String, password: String) {
+        scope.launch {
+            val token = retrofitRepo.postMyAuthorizationInfoAsync(
+                userDeviceDomainModel = UserDeviceDomainModel(
+                    AuthDomainModel(
+                        login = login,
+                        password = password
+                    ),
+                    deviceDomainModel = DeviceDomainModel(
+                        devman = _uiState.value.devman,
+                        devmod = _uiState.value.devmod,
+                        devavs = _uiState.value.devavs,
+                        devaid = _uiState.value.devaid
+                    )
+                )
+            )
+
+            _uiState.emit(
+                _uiState.value.copy(
+                    token = token
+                )
+            )
+
+            dataStoreRepo.updateToken(token = token)
+        }
     }
 
 }
