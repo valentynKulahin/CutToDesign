@@ -30,6 +30,9 @@ import androidx.navigation.NavHostController
 import com.example.cuttodesign.MainActivityViewModel
 import com.example.cuttodesign.R
 import com.example.data.datastore.PreferencesKeys.token
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.M)
 @Composable
@@ -273,8 +276,10 @@ fun AuthorizationScreenButtonSignIn(setToken: () -> Unit, getToken: () -> Unit) 
 
     ElevatedButton(
         onClick = {
-            getToken()
-            setToken()
+            CoroutineScope(Dispatchers.IO).launch {
+                getToken()
+                setToken()
+            }
         },
         modifier = Modifier
             .fillMaxWidth()

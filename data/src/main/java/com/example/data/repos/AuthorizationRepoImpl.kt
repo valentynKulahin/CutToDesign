@@ -30,14 +30,12 @@ class AuthorizationRepoImpl @Inject constructor(
         userDeviceDomainModel: UserDeviceDomainModel
     ): String {
         return authorizationRetrofitRepo.postMyAuthorizationInfoAsync(
-            userDeviceDataModel = UserDeviceDataModel(
-                login = userDeviceDomainModel.userAuthDomainModel.login,
-                password = userDeviceDomainModel.userAuthDomainModel.password,
-                devman = userDeviceDomainModel.deviceDomainModel.devman,
-                devmod = userDeviceDomainModel.deviceDomainModel.devmod,
-                devavs = userDeviceDomainModel.deviceDomainModel.devavs,
-                devaid = userDeviceDomainModel.deviceDomainModel.devaid
-            )
+            login = userDeviceDomainModel.userAuthDomainModel.login,
+            password = userDeviceDomainModel.userAuthDomainModel.password,
+            devman = userDeviceDomainModel.deviceDomainModel.devman,
+            devmod = userDeviceDomainModel.deviceDomainModel.devmod,
+            devavs = userDeviceDomainModel.deviceDomainModel.devavs,
+            devaid = userDeviceDomainModel.deviceDomainModel.devaid
         ).token
     }
 

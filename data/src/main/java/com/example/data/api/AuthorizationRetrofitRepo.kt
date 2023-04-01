@@ -3,10 +3,7 @@ package com.example.data.api
 import com.example.data.models.*
 import com.example.domain.models.UserDeviceDomainModel
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface AuthorizationRetrofitRepo {
 
@@ -21,9 +18,15 @@ interface AuthorizationRetrofitRepo {
         @Query("v") v: String
     ): ActualVersionDataModel
 
-    @POST("/users/login")
+    @FormUrlEncoded
+    @POST("/users/login/")
     suspend fun postMyAuthorizationInfoAsync(
-        @Body userDeviceDataModel: UserDeviceDataModel
+        @Field("login") login: String,
+        @Field("password") password: String,
+        @Field("devman") devman: String,
+        @Field("devmod") devmod: String,
+        @Field("devavs") devavs: String,
+        @Field("devaid") devaid: String
     ): TokenDataModel
 
 }

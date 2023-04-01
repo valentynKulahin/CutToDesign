@@ -36,10 +36,10 @@ fun StartMainNavigation(
             startDestination = NavItem.Home.route
         ) {
             composable(NavItem.Home.route) {
-                StartHomeScreen(navController = navController)
+                StartHomeScreen(navController = navController, homeViewModel = homeViewModel)
             }
             composable(NavItem.CatalogBrands.route) {
-                StartCatalogBrandsScreen(navController = navController)
+                StartCatalogBrandsScreen(navController = navController, homeViewModel = homeViewModel)
             }
             composable(NavItem.Coins.route) {
                 StartCoinsScreen(navController = navController)

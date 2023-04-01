@@ -4,11 +4,17 @@ import android.media.session.MediaSession.Token
 import android.util.Log
 import com.example.data.api.AuthorizationRetrofitRepo
 import com.example.data.api.retrofit.RetrofitHelper
+import com.example.data.datastore.PreferencesKeys.token
 import com.example.data.models.*
 import com.example.domain.models.UserDeviceDomainModel
 import com.example.domain.repos.DataStoreRepo
 import kotlinx.coroutines.flow.first
+import okhttp3.OkHttpClient
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,8 +38,6 @@ class AuthorizationRetrofitRepoImpl @Inject constructor(
             ApiRouteDataModel("")
         }
 
-        Log.d("Retrofit", "getApiAddressAsync: ${apiRoute.route}")
-
         return apiRoute
     }
 
@@ -45,22 +49,31 @@ class AuthorizationRetrofitRepoImpl @Inject constructor(
         } catch (e: Exception) {
             ActualVersionDataModel(0)
         }
-
-        Log.d("Retrofit", "getApiAddressAsync: ${lastVersion.actual_version}")
-
         return lastVersion
     }
 
     override suspend fun postMyAuthorizationInfoAsync(
-        userDeviceDataModel: UserDeviceDataModel
+        login: String,
+        password: String,
+        devman: String,
+        devmod: String,
+        devavs: String,
+        devaid: String
     ): TokenDataModel {
+
         val token: TokenDataModel = try {
             retrofit.postMyAuthorizationInfoAsync(
-                userDeviceDataModel = userDeviceDataModel
+                login = login,
+                password = password,
+                devman = devman,
+                devmod = devmod,
+                devavs = devavs,
+                devaid = devaid
             )
         } catch (e: Exception) {
             TokenDataModel("")
         }
+
         return token
     }
 

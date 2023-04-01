@@ -3,8 +3,9 @@ package com.example.cuttodesign.ui.screens.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -17,14 +18,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.cuttodesign.R
 import com.example.cuttodesign.ui.screens.navigation.NavItem
+import com.example.domain.models.ItemsDomainModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartHomeScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    homeViewModel: HomeViewModel
 ) {
 
     Scaffold(
@@ -76,14 +80,17 @@ fun StartHomeScreen(
                     .padding(contentPadding),
                 color = MaterialTheme.colorScheme.background
             ) {
-                HomeScreenMenu(navController = navController)
+                HomeScreenMenu(navController = navController, homeViewModel = homeViewModel)
             }
         }
     )
 }
 
 @Composable
-fun HomeScreenMenu(navController: NavHostController) {
+fun HomeScreenMenu(navController: NavHostController, homeViewModel: HomeViewModel) {
+    val homeVM by homeViewModel.uiState.collectAsState()
+    val items = remember { mutableStateOf(homeVM.itemsDomainModel) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -92,7 +99,7 @@ fun HomeScreenMenu(navController: NavHostController) {
     ) {
         HomeScreenTextMenu()
         Spacer(modifier = Modifier.height(10.dp))
-        HomeScreenOpenCatalogBrands(navController = navController)
+        HomeScreenOpenCatalogBrands(navController = navController, items = items.value)
         HomeScreenGradientLine()
     }
 }
@@ -106,7 +113,7 @@ fun HomeScreenTextMenu() {
 }
 
 @Composable
-fun HomeScreenOpenCatalogBrands(navController: NavHostController) {
+fun HomeScreenOpenCatalogBrands(navController: NavHostController, items: ItemsDomainModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -115,34 +122,46 @@ fun HomeScreenOpenCatalogBrands(navController: NavHostController) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        HomeScreenMenuIconAndName()
+        HomeScreenMenuIconAndName(items = items)
         HomeScreenMenuOpenIcon()
     }
 }
 
 @Composable
-fun HomeScreenMenuIconAndName() {
-    Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-        HomeScreenMenuIcon()
-        Spacer(modifier = Modifier.width(8.dp))
-        HomeScreenMenuName()
+fun HomeScreenMenuIconAndName(items: ItemsDomainModel) {
+    val list = listOf(items)
+
+    Row(
+        modifier = Modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        LazyColumn(modifier = Modifier, userScrollEnabled = true) {
+            list.forEach { menu ->
+                item {
+                    HomeScreenMenuIcon(icon = menu.itemList.itemName)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    HomeScreenMenuName(name = menu.itemList.itemImage)
+                }
+            }
+        }
     }
 }
 
 @Composable
-fun HomeScreenMenuIcon() {
-    Icon(
-        imageVector = ImageVector.vectorResource(id = R.drawable.catalog_bottom_icon),
-        contentDescription = null,
-        modifier = Modifier.size(40.dp),
-        tint = MaterialTheme.colorScheme.primary
-    )
+fun HomeScreenMenuIcon(icon: String) {
+    AsyncImage(model = icon, contentDescription = null, modifier = Modifier.size(40.dp))
+//    Icon(
+//        imageVector = ImageVector.vectorResource(id = R.drawable.catalog_bottom_icon),
+//        contentDescription = null,
+//        modifier = Modifier.size(40.dp),
+//        tint = MaterialTheme.colorScheme.primary
+//    )
 }
 
 @Composable
-fun HomeScreenMenuName() {
+fun HomeScreenMenuName(name: String) {
     Text(
-        text = stringResource(id = R.string.hm_catalog_brands),
+        text = name,
         color = MaterialTheme.colorScheme.secondary
     )
 }

@@ -1,12 +1,11 @@
 package com.example.data.repos
 
 import com.example.data.api.MainRetrofitRepo
-import com.example.data.models.BrandsDataModel
-import com.example.data.models.ItemsDataModel
-import com.example.data.models.UserDataModel
-import com.example.data.repos.api.MainRetrofitRepoImpl
+import com.example.data.mapToDomain
+import com.example.domain.models.BrandsDomainModel
+import com.example.domain.models.ItemsDomainModel
+import com.example.domain.models.UserDomainModel
 import com.example.domain.repos.MainRepo
-import retrofit2.Call
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,21 +13,21 @@ import javax.inject.Singleton
 class MainRepoImpl @Inject constructor(
     private val mainRetrofitRepo: MainRetrofitRepo
 ) : MainRepo {
+    override suspend fun getUserInfoAsync(token: String): UserDomainModel {
+        return mainRetrofitRepo.getUserInfoAsync(token = token).mapToDomain()
+    }
 
-    override suspend fun getUserInfoAsync(token: String) {//}: Call<UserDataModel> {
+    override suspend fun getMenuItemsAsync(token: String): ItemsDomainModel {
+        return mainRetrofitRepo.getMenuItemsAsync(token = token).mapToDomain()
+    }
+
+    override suspend fun getBrandsAsync(token: String): BrandsDomainModel {
+        return mainRetrofitRepo.getBrandsAsync(token = token).mapToDomain()
+    }
+
+    override suspend fun deleteUserAsync(token: String) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getMenuItemsAsync(token: String) {//}: Call<ItemsDataModel> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getBrandsAsync(token: String) {//}: Call<BrandsDataModel> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteUserAsync(token: String) {//}: Call<String> {
-        TODO("Not yet implemented")
-    }
 
 }

@@ -60,6 +60,8 @@ class AuthorizationViewModel @Inject constructor(
 
                 )
             )
+
+            setAuthInfo(login = "380501234567", password = "123456")
         }
     }
 
